@@ -1,29 +1,28 @@
 {
   "$id": "changeRequest",
   "definitions": {
-    "changeRequest": {
+    "changeTicket": {
       "title": "changeTicket",
       "type": "object",
-      "properties": {
-        "statusCode": {
-          "type": "integer",
-          "default": 200,
-          "examples": [
-            200
-          ]
+        "properties":  {
+            "change_ticket_number": "CHG0000024",
+            "priority": "4",
+            "active": "false",
+            "description": "Resend the complete BGP table to neighboring routers\r\n\r\n--Both neighbors need to support soft reset route refresh capability.\r\n--Stores complete BGP table of you neighbor in router memory.\r\n--Not a good idea on a peering router with full feed, due to the memory requirements.\r\n",
+            "work_start": "2015-07-06 18:56:04",
+            "work_end": "2015-07-06 18:56:10",
+            "change_ticket_key": "1766f1de47410200e90d87e8dee490f6"     
         },
-        "body": {
-          "type": "string",
-          "default": "",
-          "examples": [
-            ""
-          ]
-        }
-      }
+      "required": [
+        "change_ticket_number",
+        "active",
+        "priority",
+        "description",
+        "work_start",
+        "work_end",
+        "change_ticket_key"
+      ],
+      "additionalProperties": false
     }
-  },
-  "required": [
-    "statusCode",
-    "body"
-  ]
+  }
 }
