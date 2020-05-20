@@ -1,10 +1,3 @@
-const options = {
-  url: 'https://dev74158.service-now.com/',
-  username: 'admin',
-  password: 'Saritayadav@123',
-  serviceNowTable: 'change_request'
-};
-// Import built-in Node.js package path.
 const path = require('path');
 
 /**
@@ -90,52 +83,52 @@ class ServiceNowAdapter extends EventEmitter {
   }
 
   /**
- * @memberof ServiceNowAdapter
- * @method healthcheck
- * @summary Check ServiceNow Health
- * @description Verifies external system is available and healthy.
- *   Calls method emitOnline if external system is available.
- *
- * @param {ServiceNowAdapter~requestCallback} [callback] - The optional callback
- *   that handles the response.
- */
-healthcheck(callback) {
- this.getRecord((result, error) => {
-   /**
-    * For this lab, complete the if else conditional
-    * statements that check if an error exists
-    * or the instance was hibernating. You must write
-    * the blocks for each branch.
+    * @memberof ServiceNowAdapter
+    * @method healthcheck
+    * @summary Check ServiceNow Health
+    * @description Verifies external system is available and healthy.
+    *   Calls method emitOnline if external system is available.
+    *
+    * @param {ServiceNowAdapter~requestCallback} [callback] - The optional callback
+    *   that handles the response.
     */
-   if (error) {
-     /**
-      * Write this block.
-      * If an error was returned, we need to emit OFFLINE.
-      * Log the returned error using IAP's global log object
-      * at an error severity. In the log message, record
-      * this.id so an administrator will know which ServiceNow
-      * adapter instance wrote the log message in case more
-      * than one instance is configured.
-      * If an optional IAP callback function was passed to
-      * healthcheck(), execute it passing the error seen as an argument
-      * for the callback's errorMessage parameter.
-      */
-       emitOffline()
-   } else {
-     /**
-      * Write this block.
-      * If no runtime problems were detected, emit ONLINE.
-      * Log an appropriate message using IAP's global log object
-      * at a debug severity.
-      * If an optional IAP callback function was passed to
-      * healthcheck(), execute it passing this function's result
-      * parameter as an argument for the callback function's
-      * responseData parameter.
-      */
-       emitOnline()
-   }
- });
-}
+    healthcheck(callback) {
+        this.getRecord((result, error) => {
+            /**
+            * For this lab, complete the if else conditional
+            * statements that check if an error exists
+            * or the instance was hibernating. You must write
+            * the blocks for each branch.
+            */
+            if (error) {
+                /**
+                * Write this block.
+                * If an error was returned, we need to emit OFFLINE.
+                * Log the returned error using IAP's global log object
+                * at an error severity. In the log message, record
+                * this.id so an administrator will know which ServiceNow
+                * adapter instance wrote the log message in case more
+                * than one instance is configured.
+                * If an optional IAP callback function was passed to
+                * healthcheck(), execute it passing the error seen as an argument
+                * for the callback's errorMessage parameter.
+                */
+                this.emitStatus('OFFLINE');
+            } else {
+                /**
+                * Write this block.
+                * If no runtime problems were detected, emit ONLINE.
+                * Log an appropriate message using IAP's global log object
+                * at a debug severity.
+                * If an optional IAP callback function was passed to
+                * healthcheck(), execute it passing this function's result
+                * parameter as an argument for the callback function's
+                * responseData parameter.
+                */
+                this.emitOnline();
+            }
+        });
+    }
 
   /**
    * @memberof ServiceNowAdapter
@@ -190,22 +183,23 @@ healthcheck(callback) {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-    this.connector.get(this.props, (results, error) => {
+    //  this.connector.get(this.props, callback);
+     this.connector.get(this.props, (results, error) => {
         if (results) {
-            let recordArr = JSON.parse(results.body).result;
-            let ticketArr = [];
-            recordArr.forEach((obj) => {
-                ticketArr.push({
-                    change_ticket_number : obj.number,
-                    change_ticket_key : obj.sys_id,
-                    active : obj.active,
-                    priority : obj.priority,
-                    description : obj.description,
-                    work_start : obj.work_start,
-                    work_end: obj.work_end
+            let records = JSON.parse(results.body).result;
+            let tickets = [];
+            records.forEach((record) => {
+                tickets.push({
+                    change_ticket_number : record.number,
+                    change_ticket_key : record.sys_id,
+                    active : record.active,
+                    priority : record.priority,
+                    description : record.description,
+                    work_start : record.work_start,
+                    work_end: record.work_end
                 })
             })
-            return callback(ticketArr, error);
+            return callback(tickets, error);
         }
         callback(results, error);
      })
@@ -227,17 +221,18 @@ healthcheck(callback) {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
-    this.connector.post(this.props, (results, error) => {
+    //  this.connector.post(this.props, callback);
+     this.connector.post(this.props, (results, error) => {
          if (results) {
-             let recordObj = JSON.parse(results.body).result;
+             let record = JSON.parse(results.body).result;
              return callback({
-                    change_ticket_number : recordObj.number,
-                    change_ticket_key : recordObj.sys_id,
-                    active : recordObj.active,
-                    priority : recordObj.priority,
-                    description : recordObj.description,
-                    work_start : recordObj.work_start,
-                    work_end: recordObj.work_end
+                    change_ticket_number : record.number,
+                    change_ticket_key : record.sys_id,
+                    active : record.active,
+                    priority : record.priority,
+                    description : record.description,
+                    work_start : record.work_start,
+                    work_end: record.work_end
                 }, error);
         }
         callback(results, error);
