@@ -190,12 +190,12 @@ healthcheck(callback) {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-      this.connector.get(this.props, (results, error) => {
+    this.connector.get(this.props, (results, error) => {
         if (results) {
             let recordArr = JSON.parse(results.body).result;
             let ticketArr = [];
             recordArr.forEach((obj) => {
-                tickets.push({
+                ticketArr.push({
                     change_ticket_number : obj.number,
                     change_ticket_key : obj.sys_id,
                     active : obj.active,
@@ -242,7 +242,6 @@ healthcheck(callback) {
         }
         callback(results, error);
      });
-
   }
 }
 
